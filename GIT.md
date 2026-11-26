@@ -147,7 +147,15 @@ git remote add origin git@github.com:Lailyng/project-baru.git
 git push -u origin main
 ```
 
-> **Tips:** Jika ingin mengecek apakah remote sudah terhubung dengan benar, jalankan `git remote -v`.
+Jika berhasil, akan muncul output seperti berikut:
+
+```text
+To github.com:Lailyng/project-baru.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+```
+
+> **Tips:** Jalankan `git remote -v` untuk memastikan remote `origin` sudah mengarah ke URL yang benar. Jika tidak sengaja menambahkan remote dengan nama lain (misalnya `main`), hapus dengan `git remote remove main`.
 
 ---
 
@@ -166,3 +174,30 @@ Untuk menarik (*pull*) perubahan terbaru dari GitHub ke lokal:
 ```bash
 git pull
 ```
+
+---
+
+## 6. Catatan & Troubleshooting
+
+- **Commit di GitHub tampil atas nama akun lain:** GitHub menentukan pembuat commit berdasarkan `user.email` pada commit Git, bukan berdasarkan SSH key yang dipakai untuk push.
+  1. Cek konfigurasi nama & email yang sedang aktif:
+     ```bash
+     git config --show-origin user.name
+     git config --show-origin user.email
+     ```
+  2. Set nama & email khusus untuk repository ini saja (agar tidak mengganggu konfigurasi global akun lain):
+     ```bash
+     git config user.name "Lailyng"
+     git config user.email "email-akun-lailyng@example.com"
+     ```
+  3. Jika commit terakhir sudah terlanjur di-push dengan akun yang salah, perbarui author-nya lalu push ulang:
+     ```bash
+     git commit --amend --reset-author --no-edit
+     git push --force origin main
+     ```
+- **Remote duplikat / salah nama:** Nama remote standar adalah `origin` (bukan `main`, karena `main` adalah nama branch). Cek dengan `git remote -v`, lalu hapus remote yang tidak perlu dengan:
+  ```bash
+  git remote remove nama-remote
+  ```
+- **Pesan `warning: LF will be replaced by CRLF`:** Ini pesan normal di Windows terkait format baris baru (*line ending*) dan bukan error.
+- **Menggabungkan perintah di Windows PowerShell:** Di Windows PowerShell 5.1, operator `&&` belum didukung. Jalankan perintah satu per satu atau pisahkan dengan titik koma (`;`).
